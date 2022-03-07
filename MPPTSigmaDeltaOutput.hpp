@@ -8,19 +8,19 @@ class MPPTSigmaDeltaOutput : public IMPPTOutput {
 private:
 	const uint8_t sigmaDeltaChannel;
 
-public:
-	MPPTSigmaDeltaOutput(const uint8_t outPin, const uint8_t sigmaDeltaChannel = 0) :
-		sigmaDeltaChannel(sigmaDeltaChannel) {
-		/* do not use max of 312,5kHz due to ESP freezes near by 128 -> 40MHz */
-		sigmaDeltaSetup(sigmaDeltaChannel, 19531);
-		/* inverted logic: high value reduces PWM output voltage of TL494 */
-		sigmaDeltaWrite(sigmaDeltaChannel, maxValue);
-		sigmaDeltaAttachPin(outPin, sigmaDeltaChannel);
+protected:
+	virtual void writeHw(const uint8_t value) override {
+		sigmaDeltaWrite(sigmaDeltaChannel, value);
 	}
 
-	virtual void write(uint8_t value) override {
-		/* inverted logic */
-		sigmaDeltaWrite(sigmaDeltaChannel, maxValue - value);
+public:
+	MPPTSigmaDeltaOutput(const uint8_t outPin, const bool inverted=false,
+			const uint8_t sigmaDeltaChannel = 0) : IMPPTOutput(inverted),
+			sigmaDeltaChannel(sigmaDeltaChannel) {
+		/* do not use max of 312,5kHz due to ESP freezes near by 128 -> 40MHz */
+		sigmaDeltaSetup(sigmaDeltaChannel, 19531);
+		write(0);
+		sigmaDeltaAttachPin(outPin, sigmaDeltaChannel);
 	}
 };
 #endif /* __MPPT_SIGMA_DELTA_OUTPUT_HPP__ */

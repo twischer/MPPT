@@ -4,10 +4,24 @@
 #include <stdint.h>
 
 class IMPPTOutput {
+private:
+	const bool inverted;
+
+protected:
+	virtual void writeHw(const uint8_t value) = 0;
+
 public:
 	static const uint8_t maxValue = 0xFF;
 
-	virtual void write(uint8_t value) = 0;
+	IMPPTOutput(const bool inverted=false) : inverted(inverted) { }
+
+	void write(const uint8_t value) {
+		if (inverted) {
+			writeHw(maxValue - value);
+		} else {
+			writeHw(value);
+		}
+	}
 };
 #endif /* __IMPPTOUTPUT_HPP__ */
 
