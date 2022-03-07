@@ -11,6 +11,7 @@ class MPPT {
 private:
 	std::vector<std::reference_wrapper<IMPPTOutput>> outputs;
 	uint8_t pwm;
+	uint8_t pwmLimit;
 	uint32_t lastVoltage;
 	uint32_t lastPower;
 
@@ -21,12 +22,16 @@ protected:
 		}
 	}
 
+	void setOutputLimit(const uint8_t limit) {
+		pwmLimit = limit;
+	}
 public:
 	MPPT(IMPPTOutput& output) : MPPT({output}) {}
 	MPPT(IMPPTOutput& output1, IMPPTOutput& output2) : MPPT({output1, output2}) {}
 
 	MPPT(std::initializer_list<std::reference_wrapper<IMPPTOutput>> outputs) :
-			outputs(outputs), pwm(0), lastVoltage(0), lastPower(0) {
+			outputs(outputs), pwm(0), pwmLimit(IMPPTOutput::maxValue),
+			lastVoltage(0), lastPower(0) {
 		update(0, 0);
 	}
 
