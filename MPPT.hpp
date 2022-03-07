@@ -2,17 +2,31 @@
 #define __MPPT_HPP__
 
 #include <stdint.h>
+#include <initializer_list>
+#include <vector>
+#include <functional>
 #include <IMPPTOutput.hpp>
 
 class MPPT {
 private:
-	IMPPTOutput& output;
+	std::vector<std::reference_wrapper<IMPPTOutput>> outputs;
 	uint8_t pwm;
 	uint32_t lastVoltage;
 	uint32_t lastPower;
 
+protected:
+	void setOutputs(const uint8_t value) {
+		for (IMPPTOutput& output: outputs) {
+			output.write(value);
+		}
+	}
+
 public:
-	MPPT(IMPPTOutput& output) : output(output), pwm(0), lastVoltage(0), lastPower(0) {
+	MPPT(IMPPTOutput& output) : MPPT({output}) {}
+	MPPT(IMPPTOutput& output1, IMPPTOutput& output2) : MPPT({output1, output2}) {}
+
+	MPPT(std::initializer_list<std::reference_wrapper<IMPPTOutput>> outputs) :
+			outputs(outputs), pwm(0), lastVoltage(0), lastPower(0) {
 		update(0, 0);
 	}
 

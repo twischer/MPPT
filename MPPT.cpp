@@ -31,6 +31,6 @@ void MPPT::update(const float voltage, const float power)
 			pwm -= PWM_UPDATE_DIFF;
 	}
 
-	output.write(pwm);
+	setOutputs(pwm);
 }
 
