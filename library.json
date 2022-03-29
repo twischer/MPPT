@@ -1,0 +1,23 @@
+{
+  "name": "MPPT",
+  "version": "1.0.0",
+  "description": "A Maximum Power Point Tracking library for PlatformIO supporting Arduino and WiringPi",
+  "keywords": "mppt, solar, photovoltaics, pv",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/twischer/MPPT.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Timo Wischer",
+      "email": "twischer@freenet.de",
+      "maintainer": true
+    }
+  ],
+  "license": "GPL-2.0",
+  "frameworks": ["Arduino", "WiringPi"],
+  "platforms": "*"
+}
+
