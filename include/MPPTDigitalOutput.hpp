@@ -1,7 +1,12 @@
 #ifndef __MPPT_DIGITAL_OUTPUT_HPP__
 #define __MPPT_DIGITAL_OUTPUT_HPP__
 
+#ifdef RASPBERRYPI
+#include <wiringPi.h>
+#else
 #include <Arduino.h>
+#endif
+
 #include <IMPPTOutput.hpp>
 
 class MPPTDigitalOutput : public IMPPTOutput {

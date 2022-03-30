@@ -1,7 +1,12 @@
 #ifndef __MPPT_PWM_OUTPUT_HPP__
 #define __MPPT_PWM_OUTPUT_HPP__
 
+#ifdef RASPBERRYPI
+#include <wiringPi.h>
+#else
 #include <Arduino.h>
+#endif
+
 #include <IMPPTOutput.hpp>
 
 class MPPTPWMOutput : public IMPPTOutput {
