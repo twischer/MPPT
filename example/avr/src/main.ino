@@ -1,11 +1,11 @@
 #include <Adafruit_INA219.h>
 #include <MPPT.hpp>
-#include <MPPTSigmaDeltaOutput.hpp>
+#include <MPPTPWMOutput.hpp>
 
 Adafruit_INA219 ina219;
-/* GPIO12 has to be connected to dead time control of TL494 */
-const uint8_t TL494_DTC_PIN = 12;
-MPPTSigmaDeltaOutput mpptOutput(TL494_DTC_PIN, true);
+/* PB1/OC1A has to be connected to dead time control of TL494 */
+const uint8_t TL494_DTC_PIN = 9;
+MPPTPWMOutput mpptOutput(TL494_DTC_PIN, true);
 MPPT mppt(mpptOutput);
 
 
