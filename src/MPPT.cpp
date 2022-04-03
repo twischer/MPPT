@@ -3,33 +3,50 @@
 
 void MPPT::update(const float voltage, const float power)
 {
-	static const uint8_t PWM_UPDATE_DIFF = 1;
-	// TODO move to class
-	static bool increase = true;
-
-	/* always 1 W + 3% of current power */
 	const float hysteresis = 0.1;
 
-	if (voltage < 10.0 || pwm > (pwmLimit - PWM_UPDATE_DIFF))
-		increase = false;
-	else if (pwm < PWM_UPDATE_DIFF)
-		increase = true;
-	/* compensate ADC uncertainty. TODO Search for diff >15% */
-	else if ( (power + hysteresis) < lastPower) {
-		increase = !increase;
+	if (voltage < 10.0) {
+		state = STATE_INPUT_LOW;
+	} else if (pwm > (pwmLimit - PWM_UPDATE_DIFF)) {
+		state = STATE_DECREASING;
+	} else if (pwm < PWM_UPDATE_DIFF) {
+		state = STATE_INCREASING;
+	} else if ( (power + hysteresis) < lastPower) {
 		lastPower = power;
-	} else if (power > lastPower)
+		switch (state) {
+		case STATE_INCREASING:
+			state = STATE_DECREASING;
+			break;
+		default:
+			state = STATE_INCREASING;
+			break;
+		}
+	} else if (power > lastPower) {
 		lastPower = power;
+		/* keep current state */
+	}
 
-	if (increase)
-		pwm += PWM_UPDATE_DIFF;
-	else {
-		/* required in case voltage too small */
-		if (pwm <= PWM_UPDATE_DIFF)
+	actState();
+}
+
+void MPPT::actState()
+{
+	switch (state) {
+	case STATE_INCREASING:
+		if (pwm > (pwmLimit - PWM_UPDATE_DIFF)) {
 			pwm = 0;
-		else {
+		} else {
+			pwm += PWM_UPDATE_DIFF;
+		}
+		break;
+	default:
+		/* required in case voltage too small */
+		if (pwm <= PWM_UPDATE_DIFF) {
+			pwm = 0;
+		} else {
 			pwm -= PWM_UPDATE_DIFF;
 		}
+		break;
 	}
 
 	setOutputs(pwm);

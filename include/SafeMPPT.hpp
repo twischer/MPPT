@@ -39,14 +39,12 @@ private:
 
 	std::vector<OutputRange> outputRanges;
 	OutputRange* selectedOutputRange;
-	bool switchedOff;
 
 	void selectOutputRange(const float outVoltage);
 
 public:
 	template<typename... Args>
-	SafeMPPT(Args&... args) : MPPT(args...), outputRanges(), selectedOutputRange(nullptr),
-			switchedOff(false) {
+	SafeMPPT(Args&... args) : MPPT(args...), outputRanges(), selectedOutputRange(nullptr) {
 	}
 
 	bool addValidOutputRange(const float minVoltage, const float maxVoltage,
