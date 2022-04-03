@@ -28,11 +28,7 @@ void MPPT::update(const float voltage, const float power)
 		if (pwm <= PWM_UPDATE_DIFF)
 			pwm = 0;
 		else {
-			if (pwm > pwmLimit) {
-				pwm = pwmLimit;
-			} else {
-				pwm -= PWM_UPDATE_DIFF;
-			}
+			pwm -= PWM_UPDATE_DIFF;
 		}
 	}
 

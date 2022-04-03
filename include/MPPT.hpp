@@ -22,6 +22,10 @@ protected:
 	}
 
 	void setOutputLimit(const uint8_t limit) {
+		if (pwm > limit) {
+			pwm = limit;
+			setOutputs(pwm);
+		}
 		pwmLimit = limit;
 	}
 public:
