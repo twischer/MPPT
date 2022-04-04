@@ -2,7 +2,7 @@
 
 void SafeMPPT::selectOutputRange(const float outVoltage) {
 	if (selectedOutputRange == nullptr) {
-		for (auto range: outputRanges) {
+		for (auto& range: outputRanges) {
 			if (range.minVoltage <= outVoltage &&
 					outVoltage <= range.maxVoltage) {
 				selectedOutputRange = &range;
