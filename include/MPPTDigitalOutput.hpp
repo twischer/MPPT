@@ -15,7 +15,6 @@ private:
 
 protected:
 	virtual void writeHw(const uint8_t value) override {
-                const uint8_t digitalValue = (value == 0) ? LOW : HIGH;
 		digitalWrite(outPin, value);
 	}
 
@@ -24,6 +23,14 @@ public:
 			outPin(outPin) {
 		write(0);
 		pinMode(outPin, OUTPUT);
+	}
+
+	virtual void write(const uint8_t value) override {
+		if (inverted) {
+			writeHw((value == 0) ? HIGH : LOW);
+		} else {
+			writeHw((value == 0) ? LOW : HIGH);
+		}
 	}
 };
 #endif /* __MPPT_DIGITAL_OUTPUT_HPP__ */
