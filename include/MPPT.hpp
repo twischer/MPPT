@@ -22,7 +22,6 @@ private:
 	IMPPTOutput& output1;
 	IMPPTOutput* const output2;
 	uint8_t pwm;
-	uint8_t pwmLimit;
 	uint32_t lastVoltage;
 	uint32_t lastPower;
 
@@ -43,19 +42,11 @@ protected:
 		pwm = 0;
 	}
 
-	void setOutputLimit(const uint8_t limit) {
-		if (pwm > limit) {
-			pwm = limit;
-			setOutputs(pwm);
-		}
-		pwmLimit = limit;
-	}
 public:
 	MPPT(IMPPTOutput& output1, IMPPTOutput& output2) : MPPT(output1, &output2) {}
 
 	MPPT(IMPPTOutput& output1, IMPPTOutput* const output2=nullptr) :
 			output1(output1), output2(output2), pwm(0),
-			pwmLimit(IMPPTOutput::maxValue),
 			lastVoltage(0), lastPower(0), state(STATE_INPUT_LOW) {
 		update(0, 0);
 	}

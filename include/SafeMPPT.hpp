@@ -21,7 +21,7 @@ private:
 	public:
 		const float minVoltage;
 		const float maxVoltage;
-		const uint8_t maxOutputLevel;
+		IMPPTOutput* const output;
 
 		bool isValid() {
 			return (minVoltage < maxVoltage);
@@ -48,7 +48,11 @@ public:
 	}
 
 	bool addValidOutputRange(const float minVoltage, const float maxVoltage,
-			const uint8_t maxOutputLevel=IMPPTOutput::maxValue);
+			IMPPTOutput& output) {
+		return addValidOutputRange(minVoltage, maxVoltage, &output);
+	}
+	bool addValidOutputRange(const float minVoltage, const float maxVoltage,
+			IMPPTOutput* const output=nullptr);
 	void update(const float inVoltage, const float inPower, const float outVoltage);
 };
 

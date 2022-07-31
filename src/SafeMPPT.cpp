@@ -1,4 +1,5 @@
 #include <SafeMPPT.hpp>
+#include <iterator>
 
 void SafeMPPT::selectOutputRange(const float outVoltage) {
 	if (selectedOutputRange == nullptr) {
@@ -6,7 +7,10 @@ void SafeMPPT::selectOutputRange(const float outVoltage) {
 			if (range.minVoltage <= outVoltage &&
 					outVoltage <= range.maxVoltage) {
 				selectedOutputRange = &range;
-				setOutputLimit(range.maxOutputLevel);
+				/* enable the output if available */
+				if (range.output) {
+					range.output->write(IMPPTOutput::maxValue);
+				}
 				break;
 			}
 		}
@@ -14,8 +18,8 @@ void SafeMPPT::selectOutputRange(const float outVoltage) {
 }
 
 bool SafeMPPT::addValidOutputRange(const float minVoltage, const float maxVoltage,
-		const uint8_t maxOutputLevel) {
-	OutputRange range = {minVoltage, maxVoltage, maxOutputLevel};
+		IMPPTOutput* const output) {
+	OutputRange range = {minVoltage, maxVoltage, output};
 	if (!range.isValid()) {
 		return false;
 	}
@@ -42,15 +46,27 @@ void SafeMPPT::update(const float inVoltage, const float inPower, const float ou
 
 	if (selectedOutputRange == nullptr) {
 		state = STATE_OUTPUT_INVALID;
-		switchOff();
 	} else if (outVoltage < selectedOutputRange->minVoltage) {
 		state = STATE_OUTPUT_LOW;
-		switchOff();
 	} else if (outVoltage > selectedOutputRange->maxVoltage) {
 		state = STATE_OUTPUT_HIGH;
-		switchOff();
-	} else {
+	}
+
+	switch (state) {
+	case STATE_INPUT_LOW:
+	case STATE_INCREASING:
+	case STATE_DECREASING:
 		MPPT::update(inVoltage, inPower);
+		break;
+	default:
+		switchOff();
+		for (auto& range: outputRanges) {
+			/* disable the output if available */
+			if (range.output) {
+				range.output->write(0);
+			}
+		}
+		break;
 	}
 }
 

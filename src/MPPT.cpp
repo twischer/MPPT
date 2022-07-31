@@ -7,7 +7,7 @@ void MPPT::update(const float voltage, const float power)
 
 	if (voltage < 10.0) {
 		state = STATE_INPUT_LOW;
-	} else if (pwm > (pwmLimit - PWM_UPDATE_DIFF)) {
+	} else if (pwm > (IMPPTOutput::maxValue - PWM_UPDATE_DIFF)) {
 		state = STATE_DECREASING;
 	} else if (pwm < PWM_UPDATE_DIFF) {
 		state = STATE_INCREASING;
@@ -33,8 +33,8 @@ void MPPT::actState()
 {
 	switch (state) {
 	case STATE_INCREASING:
-		if (pwm > (pwmLimit - PWM_UPDATE_DIFF)) {
-			pwm = 0;
+		if (pwm > (IMPPTOutput::maxValue - PWM_UPDATE_DIFF)) {
+			pwm = IMPPTOutput::maxValue;
 		} else {
 			pwm += PWM_UPDATE_DIFF;
 		}
