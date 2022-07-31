@@ -49,3 +49,9 @@ This type of output provides a higher output frequency.
 Therefore a smaller RC filter is required.
 The same wiring as for the PWM output can be used.
 
+## Execute unit tests
+Run the following command iin this directory to execute all unit tests of this library.
+```
+$ pio test
+```
+
