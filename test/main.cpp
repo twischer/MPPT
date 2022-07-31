@@ -34,16 +34,26 @@ void test_unselectedOutputRange()
 {
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN - VOLTAGE_DIFF);
 	TEST_ASSERT_EQUAL(MPPT::STATE_OUTPUT_INVALID, mppt->getState());
+	TEST_ASSERT_EQUAL_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_EQUAL(0, output->value);
+
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MAX + VOLTAGE_DIFF);
 	TEST_ASSERT_EQUAL(MPPT::STATE_OUTPUT_INVALID, mppt->getState());
+	TEST_ASSERT_EQUAL_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_EQUAL(0, output->value);
 }
 
 void test_validOutputRange()
 {
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN);
 	TEST_ASSERT_EQUAL(MPPT::STATE_INCREASING, mppt->getState());
+	// TODO add when supported by Unity TEST_ASSERT_GREATER_THAN_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_GREATER_THAN(0, output->value);
+
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MAX);
 	TEST_ASSERT_EQUAL(MPPT::STATE_INCREASING, mppt->getState());
+	// TODO add when supported by Unity TEST_ASSERT_GREATER_THAN_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_GREATER_THAN(0, output->value);
 }
 
 void test_validOutputRange2()
@@ -51,11 +61,18 @@ void test_validOutputRange2()
 	TEST_ASSERT_TRUE(mppt->addValidOutputRange(VOLTAGE_MIN2, VOLTAGE_MAX2));
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN2);
 	TEST_ASSERT_EQUAL(MPPT::STATE_INCREASING, mppt->getState());
+	// TODO add when supported by Unity TEST_ASSERT_GREATER_THAN_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_GREATER_THAN(0, output->value);
+
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MAX2);
 	TEST_ASSERT_EQUAL(MPPT::STATE_INCREASING, mppt->getState());
+	// TODO add when supported by Unity TEST_ASSERT_GREATER_THAN_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_GREATER_THAN(0, output->value);
 
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MAX-VOLTAGE_DIFF);
 	TEST_ASSERT_EQUAL(MPPT::STATE_OUTPUT_LOW, mppt->getState());
+	TEST_ASSERT_EQUAL_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_EQUAL(0, output->value);
 }
 
 void test_underVoltage()
@@ -63,8 +80,13 @@ void test_underVoltage()
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN);
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN - VOLTAGE_DIFF);
 	TEST_ASSERT_EQUAL(MPPT::STATE_OUTPUT_LOW, mppt->getState());
+	TEST_ASSERT_EQUAL_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_EQUAL(0, output->value);
+
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN);
 	TEST_ASSERT_EQUAL(MPPT::STATE_OUTPUT_LOW, mppt->getState());
+	TEST_ASSERT_EQUAL_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_EQUAL(0, output->value);
 }
 
 void test_overVoltage()
@@ -72,8 +94,13 @@ void test_overVoltage()
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN);
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MAX + VOLTAGE_DIFF);
 	TEST_ASSERT_EQUAL(MPPT::STATE_OUTPUT_HIGH, mppt->getState());
+	TEST_ASSERT_EQUAL_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_EQUAL(0, output->value);
+
 	mppt->update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN);
 	TEST_ASSERT_EQUAL(MPPT::STATE_OUTPUT_HIGH, mppt->getState());
+	TEST_ASSERT_EQUAL_FLOAT(0.0, mppt->getPwmLevel());
+	TEST_ASSERT_EQUAL(0, output->value);
 }
 
 void test_addInvalidRange()
