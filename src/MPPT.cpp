@@ -21,7 +21,13 @@ void MPPT::update(const float voltage, const float power)
 			state = STATE_INCREASING;
 			break;
 		}
-	} else if (power > lastPower) {
+	}
+
+	/* Always update the power when it is greater. This is important especially
+	 * at startup to avoid two times STATE_INCREASING when STATE_DECREASING is
+	 * required.
+	 */
+	if (power > lastPower) {
 		lastPower = power;
 		/* keep current state */
 	}
