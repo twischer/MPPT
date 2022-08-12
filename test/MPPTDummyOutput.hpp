@@ -2,15 +2,11 @@
 #define __MPPT_DUMMY_OUTPUT_HPP__
 
 #include <IMPPTOutput.hpp>
-#include <cstdint>
+#include <gmock/gmock.h>
 
 class MPPTDummyOutput : public IMPPTOutput {
 public:
-	uint8_t value;
-
-	virtual void writeHw(const uint8_t v) {
-		value = v;
-	}
+	MOCK_METHOD(void, writeHw, (const uint8_t));
 };
 #endif  /* __MPPT_DUMMY_OUTPUT_HPP__ */
 
