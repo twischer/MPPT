@@ -28,14 +28,19 @@ private:
 
 	void actState();
 
-protected:
-	enum State state;
-
 	void setOutputs(const uint8_t value) {
 		output1.write(value);
 		if (output2 != nullptr) {
 			output2->write(value);
 		}
+	}
+
+protected:
+	enum State state;
+
+	void switchOff() {
+		setOutputs(0);
+		pwm = 0;
 	}
 
 	void setOutputLimit(const uint8_t limit) {

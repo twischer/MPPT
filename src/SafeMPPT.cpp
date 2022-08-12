@@ -42,13 +42,13 @@ void SafeMPPT::update(const float inVoltage, const float inPower, const float ou
 
 	if (selectedOutputRange == nullptr) {
 		state = STATE_OUTPUT_INVALID;
-		setOutputs(0);
+		switchOff();
 	} else if (outVoltage < selectedOutputRange->minVoltage) {
 		state = STATE_OUTPUT_LOW;
-		setOutputs(0);
+		switchOff();
 	} else if (outVoltage > selectedOutputRange->maxVoltage) {
 		state = STATE_OUTPUT_HIGH;
-		setOutputs(0);
+		switchOff();
 	} else {
 		MPPT::update(inVoltage, inPower);
 	}
