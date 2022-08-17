@@ -10,7 +10,7 @@ protected:
 	virtual void writeHw(const uint8_t value) = 0;
 
 public:
-	static const uint8_t maxValue = 0xFF;
+	static const uint8_t maxValue;
 
 	IMPPTOutput(const bool inverted=false) : inverted(inverted) { }
 
