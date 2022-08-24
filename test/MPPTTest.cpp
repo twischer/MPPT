@@ -101,3 +101,17 @@ TEST_F(MPPTTest, lateLowInputVoltage)
 	EXPECT_LT(0.0, mppt.getPwmLevel());
 }
 
+TEST_F(MPPTTest, lowInput2decreasing)
+{
+	mppt.update(INPUT_VOLTAGE, INPUT_POWER);
+	EXPECT_EQ(MPPT::STATE_INCREASING, mppt.getState());
+	mppt.update(INPUT_VOLTAGE, INPUT_POWER);
+	EXPECT_EQ(MPPT::STATE_INCREASING, mppt.getState());
+	mppt.update(LOW_INPUT_VOLTAGE, INPUT_POWER);
+	EXPECT_EQ(MPPT::STATE_INPUT_LOW, mppt.getState());
+
+	/* State shall transit to decreasing immediately after rising input voltage */
+	mppt.update(INPUT_VOLTAGE, INPUT_POWER);
+	EXPECT_EQ(MPPT::STATE_DECREASING, mppt.getState());
+}
+

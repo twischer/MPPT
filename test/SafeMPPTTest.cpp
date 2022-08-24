@@ -102,6 +102,7 @@ TEST_F(SafeMPPTTest, underVoltage)
 	EXPECT_CALL(enableOutput, writeHw(0));
 	mppt.update(INPUT_VOLTAGE, INPUT_POWER, VOLTAGE_MIN - VOLTAGE_DIFF);
 	EXPECT_EQ(MPPT::STATE_OUTPUT_LOW, mppt.getState());
+	/* On safety switch off the PWM value shall be reset */
 	EXPECT_FLOAT_EQ(0.0, mppt.getPwmLevel());
 
 	EXPECT_CALL(output, writeHw(_)).Times(0);

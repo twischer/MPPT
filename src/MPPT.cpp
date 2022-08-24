@@ -21,6 +21,11 @@ void MPPT::update(const float voltage, const float power)
 			state = STATE_INCREASING;
 			break;
 		}
+	} else if (STATE_INPUT_LOW == state) {
+		/* Immediately after input voltage rises change state from
+		 * STATE_INPUT_LOW to STATE_DECREASING
+		 */
+		state = STATE_DECREASING;
 	}
 
 	/* Always update the power when it is greater. This is important especially
